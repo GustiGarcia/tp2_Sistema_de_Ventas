@@ -1,0 +1,53 @@
+[
+    {
+      "productName": "Auriculares Bluetooth",
+      "price": 29.99,
+      "stock": 50
+    },
+    {
+      "productName": "Teclado Mecánico",
+      "price": 79.99,
+      "stock": 20
+    },
+    {
+      "productName": "Mouse Inalámbrico",
+      "price": 19.99,
+      "stock": 35
+    },
+    {
+      "productName": "Monitor 24 pulgadas",
+      "price": 159.99,
+      "stock": 10
+    },
+    {
+      "productName": "Disco SSD 1TB",
+      "price": 89.99,
+      "stock": 15
+    },
+    {
+      "productName": "Cargador USB-C",
+      "price": 14.99,
+      "stock": 60
+    },
+    {
+      "productName": "Webcam HD",
+      "price": 39.99,
+      "stock": 25
+    },
+    {
+      "productName": "Silla Gamer",
+      "price": 199.99,
+      "stock": 5
+    },
+    {
+      "productName": "Notebook 15.6\"",
+      "price": 749.99,
+      "stock": 8
+    },
+    {
+      "productName": "Hub USB 4 puertos",
+      "price": 9.99,
+      "stock": 40
+    }
+  ]
+  
