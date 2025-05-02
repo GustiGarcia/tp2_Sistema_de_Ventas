@@ -1,23 +1,30 @@
 from models.db import db
 
-class Client(db.Model):
-    __tablename__ = 'client'
+class Proovedor(db.Model):
+    __tablename__ = 'proovedor'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(25), nullable=False)
-    email = db.Column(db.String(50), unique=True, nullable=False)
-    phone = db.Column(db.String(20), unique=True, nullable=False)
+    rut= db.Column(db.String (11), unique= True , nullable=False)
+    nombre = db.Column(db.String(25), nullable=False)
+    correo = db.Column(db.String(50), unique=True, nullable=False)
+    telefono = db.Column(db.String(20), unique=True, nullable=False)
+    web= db.column (db.String(30))
+    productos = db.relationship('Producto', backref='proovedor', lazy=True)#crea clave foranea
 
-    def __init__(self, name, email, phone):
-        self.name = name
-        self.email = email
-        self.phone = phone
+    def __init__(self, rut,nombre, correo, telefono, web):
+        self.rut= rut
+        self.nombre= nombre
+        self.correo = correo
+        self.telefono = telefono
+        self.web= web
 
 
     def serialize(self):
         return {
             'id': self.id,
-            'name': self.name,
-            'email': self.email,
-            'phone': self.phone
+            'rut':self.rut,
+            'nombre': self.nombre,
+            'correo': self.correo,
+            'telefono': self.telefono,
+            'web':self.web
         }    

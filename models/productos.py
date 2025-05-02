@@ -13,14 +13,14 @@ class Producto(db.Model):
     categoria= db.relationship('Categoria', backreef='productos' lazy=True)
     
 
-   def __init__(self, nombre, precio_actual, stock_disponible, proveedor_id, categoria_id):
+    def __init__(self, nombre, precio_actual, stock_disponible, proveedor_id, categoria_id):
         self.nombre = nombre
         self.precio_actual = precio_actual
         self.stock_disponible = stock_disponible
         self.proveedor_id = proveedor_id
         self.categoria_id = categoria_id
 
-     def __repr__(self):
+    def __repr__(self):
         return f"<Producto {self.nombre}>"
 
     def serialize(self):
