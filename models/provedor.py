@@ -9,7 +9,8 @@ class Proovedor(db.Model):
     correo = db.Column(db.String(50), unique=True, nullable=False)
     telefono = db.Column(db.String(20), unique=True, nullable=False)
     web= db.column (db.String(30))
-    productos = db.relationship('Producto', backref='proovedor', lazy=True)#crea clave foranea
+    productos = db.relationship('Producto', backref='proovedor', lazy=True)
+    
 
     def __init__(self, rut,nombre, correo, telefono, web):
         self.rut= rut
