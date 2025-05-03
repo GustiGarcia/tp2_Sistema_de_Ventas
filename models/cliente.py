@@ -2,7 +2,7 @@ from models.db import db
 
 class Cliente(db.Model):
     __tablename__='clientes'
-    id=db.Column (db.Integer, primaryKey=True)
+    id=db.Column (db.Integer, primary_key=True)
     rut=db.Column(db.String(11), unique=True,nullable=False)
     nombre=db.Column(db.String(30), nullable=False)
     calle=db.Column (db.String(25), nullable=False)

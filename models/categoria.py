@@ -18,5 +18,5 @@ class Categoria(db.Model):
         return{
             'id':self.id,
             'nombre':self.nombre,
-            'descripcion':self.descripcion
+            'descripcion':self.descripcion,
         }

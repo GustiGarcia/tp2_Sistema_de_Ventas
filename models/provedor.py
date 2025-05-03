@@ -1,6 +1,6 @@
 from models.db import db
 
-class Proovedor(db.Model):
+class Provedor(db.Model):
     __tablename__ = 'provedor'
 
     id = db.Column(db.Integer, primary_key=True)
