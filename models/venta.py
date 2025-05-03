@@ -19,7 +19,7 @@ class Venta(db.Model):
     def serialize(self):
         return{
             'id':self.id,
-            'fecha':self.fecha.strftime('%Y%m%d'),
+            'fecha':self.fecha.strftime('%Y-%m-%d'),
             'cliente_id':self.cliente_id,
             'descuento':self.descuento,
             'monto_final':self.monto_final,
