@@ -33,7 +33,7 @@ with app.app_context():
     from models.provedor import Provedor
     from models.telefono import Telefono
     from models.venta import Venta
-    # db.drop_all()
+    #db.drop_all() 
     db.create_all()
 
 if __name__ == '__main__':
