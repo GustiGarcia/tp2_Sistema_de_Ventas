@@ -24,6 +24,6 @@ def serialize(self):
         'nombre': self.nombre,
         'precio': self.precio,
         'stock': self.stock,
-        'proovedor_id': self.proovedor_id,
+        'proovedor_id': self.provedor_id,
         'categoria_id': self.categoria_id
     }
