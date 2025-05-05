@@ -1,80 +1,92 @@
-from sqlalchemy.exc import IntegrityError
 from flask import Blueprint, jsonify, request
+from sqlalchemy.exc import SQLAlchemyError
 from models.db import db
 from models.categoria import Categoria
 
-categoria=Blueprint('categoria', __name__)
+categoria_bp = Blueprint('categoria', __name__)
 
-@categoria.route('/api/categoria', methods=['GET']) #GET
-def get_categoria():
+# Metodo get 
+@categoria_bp.route('/api/categorias', methods=['GET'])
+def get_categorias():
     categorias = Categoria.query.all()
-    return jsonify([categoria.serialize() for categoria in categorias])
+    return jsonify([cat.serialize() for cat in categorias]), 200
 
-"""@categoria.route('/api/categoria/<id>', methods=['GET'])# GET BY ID / busqueda por id
-def get_categoria_id(id):
-    one_categoria=Categoria.query.get(id)
-    if not one_categoria:
-        return jsonify({'error': 'Categoria no encontrado'}),404
-    return jsonify(one_categoria.serialize())""" #IMAGINO QUE NO HACE FALTA BUSCAR POR ID
-
-
-@categoria.route('/api/categoria', methods=['POST']) #POST INDIVIDUAL
-def create_client():
-    data = request.get_json() #Tomar datos enviados en formato json
+# Metodo post
+@categoria_bp.route('/api/categorias', methods=['POST'])
+def create_categoria():
+    data = request.get_json()
     nombre = data.get('nombre')
     descripcion = data.get('descripcion')
-    #VALIDACION QUE NO FALTEN DATOS
+
     if not nombre or not descripcion:
-        return jsonify({'error': 'faltan datos'}),400
-    
-#Crear Cliente (instanciamos???)
-    nuevaCategoria = Categoria(nombre=nombre,descripcion=descripcion)
+        return jsonify({'error': 'Faltan datos: nombre y/o descripción'}), 400
 
-    #agregamos a base de datos
-    db.session.add(nuevaCategoria)
-    db.session.commit() #confirma y escribre la base de datos
+    nueva_categoria = Categoria(nombre=nombre, descripcion=descripcion)
 
-    return jsonify(nuevaCategoria.serialize()), 201
-
-
-
-@categoria.route('/api/categoria/<id>', methods=['PUT'])#metodo PUT , se coloca el id en la direccion y se pasa el json
-def updateCategoria(id):
-    update = Categoria.query.get(id)
-    if not update:
-        return jsonify({'Error': 'no se encontro categoria'}),404
-    nuevoNombre=request.json['nombre']
-    nuevaDescripcion=request.json['descripcion']
-
-    update.nombre=nuevoNombre
-    update.descripcion=nuevaDescripcion
-
-    db.session.commit()
-    return jsonify (update.serialize())
+    try:
+        db.session.add(nueva_categoria)
+        db.session.commit()
+        return jsonify(nueva_categoria.serialize()), 201
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
 
 
-@categoria.route('/api/categoria/<id>', methods=(['PATCH']))
+# Metodo pot remplazando  categorias
+@categoria_bp.route('/api/categorias/<int:id>', methods=['PUT'])
+def update_categoria(id):
+    categoria = Categoria.query.get(id)
+    if not categoria:
+        return jsonify({'error': 'Categoría no encontrada'}), 404
+
+    data = request.get_json()
+    nombre = data.get('nombre')
+    descripcion = data.get('descripcion')
+
+    if not nombre or not descripcion:
+        return jsonify({'error': 'Faltan datos: nombre y/o descripción'}), 400
+
+    categoria.nombre = nombre
+    categoria.descripcion = descripcion
+
+    try:
+        db.session.commit()
+        return jsonify(categoria.serialize()), 200
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+# Metodo patch para actualziar una categoria 
+@categoria_bp.route('/api/categorias/<int:id>', methods=['PATCH'])
 def patch_categoria(id):
-    patch = Categoria.query.get(id)
-    if not patch:
-        return jsonify({'error': 'no se encontro categoria'}),404
-    
-    data = request.json
+    categoria = Categoria.query.get(id)
+    if not categoria:
+        return jsonify({'error': 'Categoría no encontrada'}), 404
+
+    data = request.get_json()
     if 'nombre' in data:
-        patch.nombre= data['nombre']
+        categoria.nombre = data['nombre']
     if 'descripcion' in data:
-        patch.descripcion = data['descripcion']
-    
-    db.session.commit()
-    return jsonify(patch.serialize())
+        categoria.descripcion = data['descripcion']
 
+    try:
+        db.session.commit()
+        return jsonify(categoria.serialize()), 200
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
 
-@categoria.route('/api/categoria/<id>', methods = ['DELETE']) #Funciona con cliente sin vehiculo, revisar para eliminar vehiculos tambien
+# Metodo delete para eliminar
+@categoria_bp.route('/api/categorias/<int:id>', methods=['DELETE'])
 def delete_categoria(id):
-    delete = Categoria.query.get(id)
-    if not delete:
-        return jsonify({'error': 'categoria no encontrado/registrado'}),404
-    db.session.delete(delete)
-    db.session.commit()
+    categoria = Categoria.query.get(id)
+    if not categoria:
+        return jsonify({'error': 'Categoría no encontrada'}), 404
 
-    return jsonify(delete.serialize())
+    try:
+        db.session.delete(categoria)
+        db.session.commit()
+        return jsonify({'mensaje': 'Categoría eliminada con éxito', 'categoria': categoria.serialize()}), 200
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
