@@ -32,7 +32,7 @@ def create_categoria():
         return jsonify({'error': str(e)}), 500
 
 
-# Metodo pot remplazando  categorias
+# Metodo put remplazando  categorias
 @categoria_bp.route('/api/categorias/<int:id>', methods=['PUT'])
 def update_categoria(id):
     categoria = Categoria.query.get(id)
@@ -76,7 +76,7 @@ def patch_categoria(id):
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
-# Metodo delete para eliminar
+# Metodo delete para eliminar categorias
 @categoria_bp.route('/api/categorias/<int:id>', methods=['DELETE'])
 def delete_categoria(id):
     categoria = Categoria.query.get(id)
