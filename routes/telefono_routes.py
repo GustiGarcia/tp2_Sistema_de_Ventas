@@ -5,14 +5,13 @@ from sqlalchemy.exc import SQLAlchemyError
 
 telefono = Blueprint('telefono', __name__)
 
-# GET - obtener todos los teléfonos
+# Metodo get
 @telefono.route('/api/telefonos', methods=['GET'])
 def get_telefonos():
     telefonos_clientes = Telefono.query.all()
     return jsonify([t.serialize() for t in telefonos_clientes]), 200
 
-
-# POST - crear un nuevo teléfono
+# Metodo post
 @telefono.route('/api/telefono', methods=['POST'])
 def create_telefono():
     data = request.get_json()
@@ -30,8 +29,7 @@ def create_telefono():
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
-
-# PUT - actualizar completamente un teléfono
+# Metodo put
 @telefono.route('/api/telefono/<int:id>', methods=['PUT'])
 def update_telefono(id):
     telefono_obj = Telefono.query.get(id)
@@ -51,8 +49,7 @@ def update_telefono(id):
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
-
-# PATCH - actualizar parcialmente un teléfono
+# Metodo patch
 @telefono.route('/api/telefono/<int:id>', methods=['PATCH'])
 def patch_telefono(id):
     telefono_obj = Telefono.query.get(id)
@@ -72,8 +69,7 @@ def patch_telefono(id):
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
-
-# DELETE - eliminar un teléfono
+# Metodo delete
 @telefono.route('/api/telefono/<int:id>', methods=['DELETE'])
 def delete_telefono(id):
     telefono_obj = Telefono.query.get(id)
