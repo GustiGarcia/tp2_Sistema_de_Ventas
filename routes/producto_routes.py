@@ -3,16 +3,16 @@ from sqlalchemy.exc import SQLAlchemyError
 from models.db import db
 from models.producto import Producto
 
-productos = Blueprint('productos', __name__)
+productos_bp = Blueprint('productos', __name__)
 
 # Metodo get
-@productos.route('/api/productos', methods=['GET'])
+@productos_bp.route('/api/productos', methods=['GET'])
 def get_productos():
     productos_all = Producto.query.all()
     return jsonify([p.serialize() for p in productos_all]), 200
 
 # Metodo post
-@productos.route('/api/producto', methods=['POST'])
+@productos_bp.route('/api/producto', methods=['POST'])
 def create_producto():
     data = request.get_json()
     if not data or 'nombre' not in data or 'precio' not in data or 'stock' not in data:
@@ -32,7 +32,7 @@ def create_producto():
         return jsonify({'error': str(e)}), 500
 
 # Metodo put
-@productos.route('/api/producto/<int:id>', methods=['PUT'])
+@productos_bp.route('/api/producto/<int:id>', methods=['PUT'])
 def update_producto(id):
     producto = Producto.query.get(id)
     if not producto:
@@ -51,7 +51,7 @@ def update_producto(id):
         return jsonify({'error': str(e)}), 500
 
 # Metodo patch
-@productos.route('/api/producto/<int:id>', methods=['PATCH'])
+@productos_bp.route('/api/producto/<int:id>', methods=['PATCH'])
 def patch_producto(id):
     producto = Producto.query.get(id)
     if not producto:
@@ -71,7 +71,7 @@ def patch_producto(id):
         return jsonify({'error': str(e)}), 500
 
 # Metodo delete
-@productos.route('/api/producto/<int:id>', methods=['DELETE'])
+@productos_bp.route('/api/producto/<int:id>', methods=['DELETE'])
 def delete_producto(id):
     producto = Producto.query.get(id)
     if not producto:

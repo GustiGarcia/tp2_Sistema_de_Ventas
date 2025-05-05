@@ -3,16 +3,16 @@ from sqlalchemy.exc import SQLAlchemyError
 from models.db import db
 from models.provedor import Provedor
 
-provedor = Blueprint('provedor', __name__)
+provedor_bp = Blueprint('provedor', __name__)
 
 # Metodo get
-@provedor.route('/api/provedores', methods=['GET'])
+@provedor_bp.route('/api/provedores', methods=['GET'])
 def get_provedores():
     provedores = Provedor.query.all()
     return jsonify([p.serialize() for p in provedores]), 200
 
 # Metodo post
-@provedor.route('/api/provedor', methods=['POST'])
+@provedor_bp.route('/api/provedor', methods=['POST'])
 def create_provedor():
     data = request.get_json()
     
@@ -30,7 +30,7 @@ def create_provedor():
         return jsonify({'error': str(e)}), 500
 
 # metodo put
-@provedor.route('/api/provedor/<int:id>', methods=['PUT'])
+@provedor_bp.route('/api/provedor/<int:id>', methods=['PUT'])
 def update_provedor(id):
     prov = Provedor.query.get(id)
     if not prov:
@@ -51,7 +51,7 @@ def update_provedor(id):
 
 
 # Metodo patch
-@provedor.route('/api/provedor/<int:id>', methods=['PATCH'])
+@provedor_bp.route('/api/provedor/<int:id>', methods=['PATCH'])
 def patch_provedor(id):
     prov = Provedor.query.get(id)
     if not prov:
@@ -71,7 +71,7 @@ def patch_provedor(id):
 
 
 # Metodo delete
-@provedor.route('/api/provedor/<int:id>', methods=['DELETE'])
+@provedor_bp.route('/api/provedor/<int:id>', methods=['DELETE'])
 def delete_provedor(id):
     prov = Provedor.query.get(id)
     if not prov:

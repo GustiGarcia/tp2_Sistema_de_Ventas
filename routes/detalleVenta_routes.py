@@ -5,16 +5,16 @@ from models.detalleVenta import DetalleVenta
 from models.venta import Venta
 from models.producto import Producto
 
-detalle_ventas = Blueprint('detalle_ventas', __name__)
+detalle_ventas_bp = Blueprint('detalle_ventas', __name__)
 
 # Metodo get
-@detalle_ventas.route('/api/detalles-venta', methods=['GET'])
+@detalle_ventas_bp.route('/api/detalles-venta', methods=['GET'])
 def get_detalles_venta():
     detalles = DetalleVenta.query.all()
     return jsonify([d.serialize() for d in detalles]), 200
 
 # Metodo post (Crea detalle)
-@detalle_ventas.route('/api/detalle-venta', methods=['POST'])
+@detalle_ventas_bp.route('/api/detalle-venta', methods=['POST'])
 def create_detalle_venta():
     data = request.get_json()
 
@@ -42,7 +42,7 @@ def create_detalle_venta():
         return jsonify({'error': str(e)}), 500
 
 # Metodo put
-@detalle_ventas.route('/api/detalle-venta/<int:id>', methods=['PUT'])
+@detalle_ventas_bp.route('/api/detalle-venta/<int:id>', methods=['PUT'])
 def update_detalle_venta(id):
     detalle = DetalleVenta.query.get(id)
     if not detalle:
@@ -69,7 +69,7 @@ def update_detalle_venta(id):
         return jsonify({'error': str(e)}), 500
 
 # Metodo path (actualizaciones)
-@detalle_ventas.route('/api/detalle-venta/<int:id>', methods=['PATCH'])
+@detalle_ventas_bp.route('/api/detalle-venta/<int:id>', methods=['PATCH'])
 def patch_detalle_venta(id):
     detalle = DetalleVenta.query.get(id)
     if not detalle:
@@ -97,7 +97,7 @@ def patch_detalle_venta(id):
         return jsonify({'error': str(e)}), 500
 
 # Metodo delete (elimina detalle)
-@detalle_ventas.route('/api/detalle-venta/<int:id>', methods=['DELETE'])
+@detalle_ventas_bp.route('/api/detalle-venta/<int:id>', methods=['DELETE'])
 def delete_detalle_venta(id):
     detalle = DetalleVenta.query.get(id)
     if not detalle:

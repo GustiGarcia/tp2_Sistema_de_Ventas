@@ -3,16 +3,16 @@ from models.db import db
 from models.telefono import Telefono
 from sqlalchemy.exc import SQLAlchemyError
 
-telefono = Blueprint('telefono', __name__)
+telefono_bp = Blueprint('telefono', __name__)
 
 # Metodo get
-@telefono.route('/api/telefonos', methods=['GET'])
+@telefono_bp.route('/api/telefonos', methods=['GET'])
 def get_telefonos():
     telefonos_clientes = Telefono.query.all()
     return jsonify([t.serialize() for t in telefonos_clientes]), 200
 
 # Metodo post
-@telefono.route('/api/telefono', methods=['POST'])
+@telefono_bp.route('/api/telefono', methods=['POST'])
 def create_telefono():
     data = request.get_json()
 
@@ -30,7 +30,7 @@ def create_telefono():
         return jsonify({'error': str(e)}), 500
 
 # Metodo put
-@telefono.route('/api/telefono/<int:id>', methods=['PUT'])
+@telefono_bp.route('/api/telefono/<int:id>', methods=['PUT'])
 def update_telefono(id):
     telefono_obj = Telefono.query.get(id)
     if not telefono_obj:
@@ -50,7 +50,7 @@ def update_telefono(id):
         return jsonify({'error': str(e)}), 500
 
 # Metodo patch
-@telefono.route('/api/telefono/<int:id>', methods=['PATCH'])
+@telefono_bp.route('/api/telefono/<int:id>', methods=['PATCH'])
 def patch_telefono(id):
     telefono_obj = Telefono.query.get(id)
     if not telefono_obj:
@@ -70,7 +70,7 @@ def patch_telefono(id):
         return jsonify({'error': str(e)}), 500
 
 # Metodo delete
-@telefono.route('/api/telefono/<int:id>', methods=['DELETE'])
+@telefono_bp.route('/api/telefono/<int:id>', methods=['DELETE'])
 def delete_telefono(id):
     telefono_obj = Telefono.query.get(id)
     if not telefono_obj:

@@ -4,16 +4,16 @@ from models.db import db
 from models.venta import Venta
 from models.cliente import Cliente
 
-ventas = Blueprint('ventas', __name__)
+ventas_bp = Blueprint('ventas', __name__)
 
 # Metodo get
-@ventas.route('/api/ventas', methods=['GET'])
+@ventas_bp.route('/api/ventas', methods=['GET'])
 def get_ventas():
     ventas_all = Venta.query.all()
     return jsonify([v.serialize() for v in ventas_all]), 200
 
 # Metodo post (crea una venta)
-@ventas.route('/api/venta', methods=['POST'])
+@ventas_bp.route('/api/venta', methods=['POST'])
 def create_venta():
     data = request.get_json()
 
@@ -38,7 +38,7 @@ def create_venta():
         return jsonify({'error': str(e)}), 500
 
 # Metodo put (actualzia una venta completamente)
-@ventas.route('/api/venta/<int:id>', methods=['PUT'])
+@ventas_bp.route('/api/venta/<int:id>', methods=['PUT'])
 def update_venta(id):
     venta = Venta.query.get(id)
     if not venta:
@@ -62,7 +62,7 @@ def update_venta(id):
         return jsonify({'error': str(e)}), 500
 
 # Metodo patch (actualzia momentaneamente una venta)
-@ventas.route('/api/venta/<int:id>', methods=['PATCH'])
+@ventas_bp.route('/api/venta/<int:id>', methods=['PATCH'])
 def patch_venta(id):
     venta = Venta.query.get(id)
     if not venta:
@@ -85,7 +85,7 @@ def patch_venta(id):
         return jsonify({'error': str(e)}), 500
 
 # Metodo delete (Eliminamos venta)
-@ventas.route('/api/venta/<int:id>', methods=['DELETE'])
+@ventas_bp.route('/api/venta/<int:id>', methods=['DELETE'])
 def delete_venta(id):
     venta = Venta.query.get(id)
     if not venta:
