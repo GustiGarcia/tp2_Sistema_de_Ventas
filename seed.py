@@ -2,8 +2,8 @@ import os
 import json
 from app import app
 from models.db import db
-from models.client import Client
-from models.products import Products
+from models.cliente import Cliente
+from models.producto import Producto
 
 DATA_DIR = 'data'
 

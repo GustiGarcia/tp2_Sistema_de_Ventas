@@ -9,8 +9,7 @@ class Categoria(db.Model):
     productos=db.relationship('Producto', backref='Categoria', lazy = True)
 
 
-    def __init__(self,id,nombre,descripcion):
-        self.id=id
+    def __init__(self,nombre,descripcion):
         self.nombre=nombre
         self.descripcion=descripcion
 
