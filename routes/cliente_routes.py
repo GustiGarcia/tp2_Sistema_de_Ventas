@@ -2,51 +2,61 @@ from sqlalchemy.exc import IntegrityError
 from flask import Blueprint, jsonify, request
 from models.db import db
 from models.cliente import Cliente
-cliente = Blueprint('client', __name__)
+from models.telefono import Telefono
+
+cliente = Blueprint('cliente', __name__)
+
+@cliente.route('/api/clientes', methods=['GET'])
+def get_clientes():
+    clientes = Cliente.query.all()
+    return jsonify([cliente.serialize() for cliente in clientes])
 
 
-
-@cliente.route('/api/clients')
-def get_client():
-    clients = Cliente.query.all()
-    return jsonify([client.serialize() for client in clients])
-
-
-@cliente.route('/api/add_client', methods=['POST'])
+@cliente.route('/api/cliente', methods=['POST'])
 def add_client():
     data = request.get_json()
+
+    if not data or not all(key in data for key in ['rut','nombre','calle','numero','ciudad','provincia']):
+        return jsonify({'Error': 'faltan datos '}),400
+
+    telefonos_data = data.get('telefonos', [])
+    if not isinstance(telefonos_data, list):
+        return jsonify({'Error': 'El campo telefonos debe ser una lista'}),400
+
+    nuevo_cliente = Cliente(
+        rut=data['rut'],
+        nombre=data['nombre'],
+        calle=data['calle'],
+        numero=data['numero'],
+        ciudad=data['ciudad'],
+        provincia=data['provincia']
+    )
+    db.session.add(nuevo_cliente)
+    db.session.commit()  # Ahora ya tiene ID
+
+    # Crear teléfonos (si los hay)
+    for numero_tel in telefonos_data:
+        nuevo_telefono = Telefono(numero=numero_tel, cliente_id=nuevo_cliente.id)
+        db.session.add(nuevo_telefono)
+
+    db.session.commit()
+
+    return jsonify({
+        'mensaje': 'Cliente creado con éxito',
+        'cliente': nuevo_cliente.serialize()
+    }), 201
+
     
-    if not data or not all(key in data for key in ['name', 'email', 'phone']):
-        return jsonify({'error': 'Faltan datos requeridos'}), 400
-
-    try:
-        print(f"Datos recibidos: {data}")  # Ver qué datos llegan
-
-        new_client = Cliente(data['name'], data['email'], data['phone'])
-        print(f"Creando cliente: {new_client.name}, {new_client.email}, {new_client.phone}")
-
-        db.session.add(new_client)
-        db.session.commit()
-
-        return jsonify({'message': 'Cliente agregado exitosamente', 'client': new_client.serialize()}), 201
-
-    except IntegrityError:
-        db.session.rollback()
-        return jsonify({'error': 'El email ya está registrado'}), 400
-
-    except Exception as e:
-        db.session.rollback()
-        print(f"Error inesperado: {e}")  # Ver el error en la terminal
-        return jsonify({'error': 'Error al agregar el cliente'}), 500
+"""
 
 @cliente.route("/api/del_client/<int:id>", methods=['DELETE'])
 def delete_client(id):
-    client = Cliente.query.get(id)
+    cliente = Cliente.query.get(id)
     
-    if not client: 
+    if not cliente: 
         return jsonify({'message':'Cliente not found'}), 404 
     try:
-        db.session.delete(client)
+        db.session.delete(cliente)
         db.session.commit()
         return jsonify({'message': 'Client delete successfully!'}), 200
     except Exception as e:
@@ -109,3 +119,4 @@ def patch_client(id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
+"""
