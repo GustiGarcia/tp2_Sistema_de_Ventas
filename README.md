@@ -15,7 +15,7 @@ A lo largo del curso se trabajaron los siguientes temas principales:
 
 ## 🗂️ Contenido del repositorio
 
-### Proyecto 1: Taller Mecánico
+### Proyecto 2: Sistema de Ventas
 
 Este proyecto integra los principales conceptos del curso. Los objetivos fueron:
 
@@ -39,7 +39,7 @@ Pasos:
 1. Clonar el repositorio:
 
 ```bash
-git clone https://github.com/Nahuelito22/Programacion_2-Taller_Mecanico.git
+git clone https://github.com/GustiGarcia/tp2_Sistema_de_Ventas.git
 ```
 
 2. Configurar la conexión a la base de datos en el archivo `.env` (ver `example.env`).
@@ -63,10 +63,10 @@ python app.py
 ## 📦 Instrucciones generales de uso
 
 1. Cloná el repositorio:  
-   `git clone https://github.com/Nahuelito22/Programacion_2-Taller_Mecanico.git`
+   `git clone https://github.com/GustiGarcia/tp2_Sistema_de_Ventas.git`
 
 2. Navegá hasta el directorio del proyecto:  
-   `cd Programacion_2-Taller_Mecanico`
+   `cd tp2_Sitema_de_Ventas`
 
 3. Seguí las instrucciones específicas de cada carpeta o proyecto dentro del repositorio.
 
