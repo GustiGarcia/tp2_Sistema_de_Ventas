@@ -75,7 +75,7 @@ python app.py
 
 **Gustavo Garcia**  
 GitHub: [@Gusti Garcia](https://github.com/GustiGarcia)  
-Email: (Editar Correo)
+Email: profegusgarcia@gmail.com
 
 **Nahuel Ghilardi**  
 GitHub: [@Nahuelito22](https://github.com/Nahuelito22)  
