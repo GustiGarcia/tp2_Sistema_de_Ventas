@@ -15,11 +15,13 @@ def get_provedores():
 @provedor_bp.route('/api/provedor', methods=['POST'])
 def create_provedor():
     data = request.get_json()
-    
-    if not data or 'nombre' not in data or 'contacto' not in data:
+    required_fields = ['rut', 'nombre', 'correo', 'telefono', 'web']
+
+    if not data or not all(field in data for field in required_fields):
         return jsonify({'error': 'Faltan campos requeridos'}), 400
 
-    nuevo = Provedor(nombre=data['nombre'], contacto=data['contacto'])
+
+    nuevo = Provedor(rut=data['rut'],nombre=data['nombre'],correo=data['correo'] ,telefono=data['telefono'], web=data['web'])
 
     try:
         db.session.add(nuevo)
@@ -37,12 +39,18 @@ def update_provedor(id):
         return jsonify({'error': 'Proveedor no encontrado'}), 404
 
     data = request.get_json()
-    if not data or 'nombre' not in data or 'contacto' not in data:
+    required_fields = ['rut', 'nombre', 'correo', 'telefono', 'web']
+
+    if not data or not all(field in data for field in required_fields):
         return jsonify({'error': 'Faltan campos requeridos'}), 400
 
+
     try:
+        prov.rut=data['rut']
         prov.nombre = data['nombre']
-        prov.contacto = data['contacto']
+        prov.correo=data['correo']
+        prov.telefono = data['telefono']
+        prov.web=data['web']
         db.session.commit()
         return jsonify({'mensaje': 'Proveedor actualizado', 'provedor': prov.serialize()}), 200
     except SQLAlchemyError as e:
@@ -59,10 +67,17 @@ def patch_provedor(id):
 
     data = request.get_json()
     try:
+        if 'rut' in data:
+            prov.rut=data['rut']
         if 'nombre' in data:
             prov.nombre = data['nombre']
-        if 'contacto' in data:
-            prov.contacto = data['contacto']
+        if 'correo' in data:
+            prov.correo=data['correo']
+        if 'telefono' in data:
+            prov.telefono = data['telefono']
+        if 'web' in data:
+            prov.web=data['web']
+
         db.session.commit()
         return jsonify({'mensaje': 'Proveedor actualizado parcialmente', 'provedor': prov.serialize()}), 200
     except SQLAlchemyError as e:
