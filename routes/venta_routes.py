@@ -17,7 +17,7 @@ def get_ventas():
 def create_venta():
     data = request.get_json()
 
-    if not data or 'cliente_id' not in data or 'fecha' not in data:
+    if not data or 'cliente_id' not in data or 'descuento' not in data or 'monto_final' not in data:
         return jsonify({'error': 'Faltan campos requeridos'}), 400
 
     cliente = Cliente.query.get(data['cliente_id'])
@@ -26,7 +26,9 @@ def create_venta():
 
     nueva_venta = Venta(
         cliente_id=data['cliente_id'],
-        fecha=data['fecha']
+        descuento=data['descuento'],
+        monto_final=data['monto_final']
+        
     )
 
     try:

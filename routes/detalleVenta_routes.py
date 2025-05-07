@@ -18,7 +18,7 @@ def get_detalles_venta():
 def create_detalle_venta():
     data = request.get_json()
 
-    if not data or 'venta_id' not in data or 'producto_id' not in data or 'cantidad' not in data:
+    if not data or 'venta_id' not in data or 'producto_id' not in data or 'cantidad' not in data or 'precio_unitario' not in data:
         return jsonify({'error': 'Faltan campos requeridos'}), 400
 
     # Verifica productos
@@ -30,7 +30,8 @@ def create_detalle_venta():
     nuevo_detalle = DetalleVenta(
         venta_id=data['venta_id'],
         producto_id=data['producto_id'],
-        cantidad=data['cantidad']
+        cantidad=data['cantidad'],
+        precio_unitario=data['precio_unitario']
     )
 
     try:

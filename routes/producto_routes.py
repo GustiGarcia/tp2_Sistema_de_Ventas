@@ -15,13 +15,16 @@ def get_productos():
 @productos_bp.route('/api/producto', methods=['POST'])
 def create_producto():
     data = request.get_json()
-    if not data or 'nombre' not in data or 'precio' not in data or 'stock' not in data:
+    if not data or 'nombre' not in data or 'precio' not in data or 'stock' not in data or 'provedor_id' not in data or 'categoria_id' not in data :
         return jsonify({'error': 'Faltan campos requeridos'}), 400
 
     nuevo_producto = Producto(
         nombre=data['nombre'],
         precio=data['precio'],
-        stock=data['stock']
+        stock=data['stock'],
+        provedor_id=data['provedor_id'],
+        categoria_id=data['categoria_id']
+
     )
     try:
         db.session.add(nuevo_producto)

@@ -10,20 +10,20 @@ class Producto(db.Model):
     provedor_id= db.Column(db.Integer, db.ForeignKey('provedor.id'), nullable=False)
     categoria_id= db.Column(db.Integer, db.ForeignKey('categoria.id'), nullable=False)
 
-def __init__(self, nombre, precio, stock, proovedor_id, categoria_id):
-    self.nombre = nombre
-    self.precio = precio
-    self.stock = stock
-    self.proovedor_id = proovedor_id
-    self.categoria_id = categoria_id
+    def __init__(self, nombre, precio, stock, provedor_id, categoria_id):
+        self.nombre = nombre
+        self.precio = precio
+        self.stock = stock
+        self.provedor_id = provedor_id
+        self.categoria_id = categoria_id
 
 
-def serialize(self):
-    return {
+    def serialize(self):
+        return {
         'id': self.id,
         'nombre': self.nombre,
         'precio': self.precio,
         'stock': self.stock,
-        'proovedor_id': self.provedor_id,
+        'provedor_id': self.provedor_id,
         'categoria_id': self.categoria_id
     }
