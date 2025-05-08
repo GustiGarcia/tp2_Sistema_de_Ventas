@@ -41,7 +41,7 @@ def update_producto(id):
     if not producto:
         return jsonify({'error': 'Producto no encontrado'}), 404
     data = request.get_json()
-    if not data or 'nombre' not in data or 'precio' not in data or 'stock' not in data:
+    if not data or 'nombre' not in data or 'precio' not in data or 'stock' not in data or 'provedor_id' not in data or 'categoria_id' not in data :
         return jsonify({'error': 'Faltan campos requeridos'}), 400
     try:
         producto.nombre = data['nombre']
@@ -67,6 +67,11 @@ def patch_producto(id):
             producto.precio = data['precio']
         if 'stock' in data:
             producto.stock = data['stock']
+        if 'provedor_id' in data :
+            producto.provedor=data['provedor_id']
+        if 'categoria_id' in data:
+            producto.categoria_id=data['categoria_id']
+            
         db.session.commit()
         return jsonify({'mensaje': 'Producto actualizado parcialmente', 'producto': producto.serialize()}), 200
     except SQLAlchemyError as e:

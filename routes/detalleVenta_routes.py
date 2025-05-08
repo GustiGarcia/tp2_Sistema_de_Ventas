@@ -50,7 +50,7 @@ def update_detalle_venta(id):
         return jsonify({'error': 'Detalle no encontrado'}), 404
 
     data = request.get_json()
-    if not data or 'venta_id' not in data or 'producto_id' not in data or 'cantidad' not in data:
+    if not data or 'venta_id' not in data or 'producto_id' not in data or 'cantidad' not in data or 'precio_unitario' not in data:
         return jsonify({'error': 'Faltan campos requeridos'}), 400
 
     venta = Venta.query.get(data['venta_id'])
@@ -91,6 +91,10 @@ def patch_detalle_venta(id):
             detalle.producto_id = data['producto_id']
         if 'cantidad' in data:
             detalle.cantidad = data['cantidad']
+        if 'precio_unitario' in data:
+            detalle.precio_unitario=data['precio_unitario']
+        if 'subtotal' in data:
+            detalle.subtotal=data['subtotal']
         db.session.commit()
         return jsonify({'mensaje': 'Detalle actualizado parcialmente', 'detalle': detalle.serialize()}), 200
     except SQLAlchemyError as e:

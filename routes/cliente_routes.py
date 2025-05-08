@@ -82,7 +82,7 @@ def update_cliente(id):
         return jsonify({'error': str(e)}), 500
 
 
-# Metodo patch para actualziar una categoria 
+# Metodo patch para actualziar una categoria / ver patchear telefonos en el mismo metodo tal vez
 @cliente_bp.route('/api/clientes/<int:id>', methods=['PATCH'])
 def patch_cliente(id):
     cliente = Cliente.query.get(id)
