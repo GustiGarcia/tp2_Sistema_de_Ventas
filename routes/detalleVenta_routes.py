@@ -18,8 +18,8 @@ def get_detalles_venta():
 def create_detalle_venta():
     data = request.get_json()
 
-    if not data or 'venta_id' not in data or 'producto_id' not in data or 'cantidad' not in data:
-        return jsonify({'error': 'Faltan campos requeridos'}), 400
+    if not data or 'venta_id' not in data or 'producto_id' not in data or 'cantidad' not in data or 'precio_unitario' not in data:
+        return jsonify({'error': 'Faltan campos requeridos. Asegúrate de incluir venta_id, producto_id, cantidad y precio_unitario.'}), 400
 
     # Verifica productos
     venta = Venta.query.get(data['venta_id'])
@@ -27,13 +27,13 @@ def create_detalle_venta():
     if not venta or not producto:
         return jsonify({'error': 'Venta o Producto no existente'}), 404
     
-    nuevo_detalle = DetalleVenta(
-        venta_id=data['venta_id'],
-        producto_id=data['producto_id'],
-        cantidad=data['cantidad']
-    )
-
     try:
+        nuevo_detalle = DetalleVenta(
+            venta_id=data['venta_id'],
+            producto_id=data['producto_id'],
+            cantidad=data['cantidad'],
+            precio_unitario=data['precio_unitario']  
+        )
         db.session.add(nuevo_detalle)
         db.session.commit()
         return jsonify({'mensaje': 'Detalle de venta creado', 'detalle': nuevo_detalle.serialize()}), 201
@@ -49,7 +49,7 @@ def update_detalle_venta(id):
         return jsonify({'error': 'Detalle no encontrado'}), 404
 
     data = request.get_json()
-    if not data or 'venta_id' not in data or 'producto_id' not in data or 'cantidad' not in data:
+    if not data or 'venta_id' not in data or 'producto_id' not in data or 'cantidad' not in data or 'precio_unitario' not in data:
         return jsonify({'error': 'Faltan campos requeridos'}), 400
 
     venta = Venta.query.get(data['venta_id'])
@@ -62,6 +62,7 @@ def update_detalle_venta(id):
         detalle.venta_id = data['venta_id']
         detalle.producto_id = data['producto_id']
         detalle.cantidad = data['cantidad']
+        detalle.precio_unitario = data['precio_unitario'] 
         db.session.commit()
         return jsonify({'mensaje': 'Detalle actualizado', 'detalle': detalle.serialize()}), 200
     except SQLAlchemyError as e:
@@ -90,6 +91,8 @@ def patch_detalle_venta(id):
             detalle.producto_id = data['producto_id']
         if 'cantidad' in data:
             detalle.cantidad = data['cantidad']
+        if 'precio_unitario' in data:
+            detalle.precio_unitario = data['precio_unitario']  
         db.session.commit()
         return jsonify({'mensaje': 'Detalle actualizado parcialmente', 'detalle': detalle.serialize()}), 200
     except SQLAlchemyError as e:

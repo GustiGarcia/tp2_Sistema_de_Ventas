@@ -15,72 +15,83 @@ def get_provedores():
 @provedor_bp.route('/api/provedor', methods=['POST'])
 def create_provedor():
     data = request.get_json()
-    
-    if not data or 'nombre' not in data or 'contacto' not in data:
-        return jsonify({'error': 'Faltan campos requeridos'}), 400
+    if not data or 'nombre' not in data:
+        return jsonify({'error': 'Falta el campo requerido: nombre'}), 400
 
-    nuevo = Provedor(nombre=data['nombre'], contacto=data['contacto'])
-
+    nuevo_provedor = Provedor(
+        nombre=data['nombre'],
+        rut=data.get('rut'),
+        correo=data.get('correo'),
+        telefono=data.get('telefono'),
+        web=data.get('web')
+    )
     try:
-        db.session.add(nuevo)
+        db.session.add(nuevo_provedor)
         db.session.commit()
-        return jsonify({'mensaje': 'Proveedor creado', 'provedor': nuevo.serialize()}), 201
+        return jsonify({'mensaje': 'Proveedor creado con éxito', 'proveedor': nuevo_provedor.serialize()}), 201
     except SQLAlchemyError as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
-# metodo put
+# Metodo put
 @provedor_bp.route('/api/provedor/<int:id>', methods=['PUT'])
 def update_provedor(id):
-    prov = Provedor.query.get(id)
-    if not prov:
+    proveedor = Provedor.query.get(id)
+    if not proveedor:
         return jsonify({'error': 'Proveedor no encontrado'}), 404
 
     data = request.get_json()
-    if not data or 'nombre' not in data or 'contacto' not in data:
-        return jsonify({'error': 'Faltan campos requeridos'}), 400
+    if not data or 'nombre' not in data: 
+        return jsonify({'error': 'Falta el campo requerido: nombre'}), 400
 
     try:
-        prov.nombre = data['nombre']
-        prov.contacto = data['contacto']
+        proveedor.nombre = data['nombre']
+        proveedor.rut = data.get('rut')
+        proveedor.correo = data.get('correo')
+        proveedor.telefono = data.get('telefono')
+        proveedor.web = data.get('web')
         db.session.commit()
-        return jsonify({'mensaje': 'Proveedor actualizado', 'provedor': prov.serialize()}), 200
+        return jsonify({'mensaje': 'Proveedor actualizado con éxito', 'proveedor': proveedor.serialize()}), 200
     except SQLAlchemyError as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
-
 
 # Metodo patch
 @provedor_bp.route('/api/provedor/<int:id>', methods=['PATCH'])
 def patch_provedor(id):
-    prov = Provedor.query.get(id)
-    if not prov:
+    proveedor = Provedor.query.get(id)
+    if not proveedor:
         return jsonify({'error': 'Proveedor no encontrado'}), 404
 
     data = request.get_json()
     try:
         if 'nombre' in data:
-            prov.nombre = data['nombre']
-        if 'contacto' in data:
-            prov.contacto = data['contacto']
+            proveedor.nombre = data['nombre']
+        if 'rut' in data:
+            proveedor.rut = data['rut']
+        if 'correo' in data:
+            proveedor.correo = data['correo']
+        if 'telefono' in data:
+            proveedor.telefono = data['telefono']
+        if 'web' in data:
+            proveedor.web = data['web']
         db.session.commit()
-        return jsonify({'mensaje': 'Proveedor actualizado parcialmente', 'provedor': prov.serialize()}), 200
+        return jsonify({'mensaje': 'Proveedor actualizado parcialmente', 'proveedor': proveedor.serialize()}), 200
     except SQLAlchemyError as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
-
 # Metodo delete
 @provedor_bp.route('/api/provedor/<int:id>', methods=['DELETE'])
 def delete_provedor(id):
-    prov = Provedor.query.get(id)
-    if not prov:
+    proveedor = Provedor.query.get(id)
+    if not proveedor:
         return jsonify({'error': 'Proveedor no encontrado'}), 404
 
     try:
-        db.session.delete(prov)
+        db.session.delete(proveedor)
         db.session.commit()
-        return jsonify({'mensaje': 'Proveedor eliminado', 'provedor': prov.serialize()}), 200
+        return jsonify({'mensaje': 'Proveedor eliminado con éxito', 'proveedor': proveedor.serialize()}), 200
     except SQLAlchemyError as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500

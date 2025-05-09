@@ -1,10 +1,11 @@
 from models.db import db
+from sqlalchemy import ForeignKey
 
 class Telefono(db.Model):
     __tablename__='telefonos'
     id=db.Column(db.Integer,primary_key=True)#agregar id para cada telefono
     numero=db.Column(db.String(15),nullable=False)
-    cliente_id=db.Column(db.Integer, db.ForeignKey('clientes.id'), nullable=False)
+    cliente_id=db.Column(db.Integer, db.ForeignKey('clientes.id',ondelete='CASCADE'), nullable=False)
     
 
     def __init__(self,numero, cliente_id):

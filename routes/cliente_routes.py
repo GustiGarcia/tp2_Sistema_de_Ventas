@@ -6,7 +6,7 @@ from models.telefono import Telefono
 
 cliente_bp = Blueprint('cliente', __name__)
 
-# Metodo get 
+# Metodo get
 @cliente_bp.route('/api/clientes', methods=['GET'])
 def get_clientes():
     clientes = Cliente.query.all()
@@ -35,17 +35,20 @@ def add_cliente():
             provincia=data['provincia']
         )
         db.session.add(nuevo_cliente)
-        db.session.commit()
+        db.session.flush()  
 
         # Crear teléfonos (si los hay)
+        telefonos_creados = []
         for numero_tel in telefonos_data:
             nuevo_telefono = Telefono(numero=numero_tel, cliente_id=nuevo_cliente.id)
             db.session.add(nuevo_telefono)
+            telefonos_creados.append(nuevo_telefono)
 
-        db.session.commit()
+        db.session.commit()  
         return jsonify({
             'mensaje': 'Cliente creado con éxito',
-            'cliente': nuevo_cliente.serialize()
+            'cliente': nuevo_cliente.serialize(),
+            'telefonos': [tel.serialize() for tel in telefonos_creados] 
         }), 201
 
     except SQLAlchemyError as e:
@@ -82,7 +85,7 @@ def update_cliente(id):
         return jsonify({'error': str(e)}), 500
 
 
-# Metodo patch para actualziar una categoria 
+# Metodo patch para actualziar una categoria
 @cliente_bp.route('/api/clientes/<int:id>', methods=['PATCH'])
 def patch_cliente(id):
     cliente = Cliente.query.get(id)
@@ -110,18 +113,23 @@ def patch_cliente(id):
     except SQLAlchemyError as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
-    
+
 # Metodo delete para eliminar un cliente
 @cliente_bp.route('/api/clientes/<int:id>', methods=['DELETE'])
 def delete_cliente(id):
-    cliente = Cliente.query.get(id)
+    cliente = db.session.get(Cliente, id)
     if not cliente:
         return jsonify({'error': 'Cliente no encontrado'}), 404
 
     try:
+        # Desasociar explícitamente los teléfonos del cliente
+        telefonos_a_eliminar = list(cliente.telefono)  # Crear una copia para evitar errores de concurrencia
+        for telefono in telefonos_a_eliminar:
+            db.session.delete(telefono)
+
         db.session.delete(cliente)
         db.session.commit()
-        return jsonify({'mensaje': 'Cliente eliminado con éxito'}), 200
+        return jsonify({'mensaje': 'Cliente y teléfonos eliminados con éxito'}), 200
     except SQLAlchemyError as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
