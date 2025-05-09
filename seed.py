@@ -11,20 +11,16 @@ def populate_clients(data):
     created = 0
     for item in data:
         name = item.get('name')
-        email = item.get('email')
-        phone = item.get('phone')
-
-        if not name or not email or not phone:
-            continue
-
-        exists = Client.query.filter(
-            (Client.email == email) | (Client.phone == phone)
+        telefono = item.get('telefono')
+        
+        exists = Cliente.query.filter(
+            (Cliente.email == email) | (Cliente.phone == telefono)
         ).first()
 
         if exists:
             continue
 
-        client = Client(name=name, email=email, phone=phone)
+        client = Cliente(name=name, email=email, phone=telefono)
         db.session.add(client)
         created += 1
 
